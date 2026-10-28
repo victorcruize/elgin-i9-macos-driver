@@ -15,7 +15,7 @@ Se o macOS bloquear a abertura do arquivo baixado, use o Terminal na pasta extra
 sh install.sh 192.168.1.100
 ```
 
-Substitua o IP pelo da sua impressora. A instalação compila para a arquitetura do próprio Mac; requer macOS com suporte a filtros CUPS/PPD, cabeçalhos CUPS e Command Line Tools da Apple. A compatibilidade foi verificada apenas no Mac desta sessão (macOS 27.0.1); outras versões e modelos precisam de validação. Não exige Homebrew. Não inclui pacote `.pkg` assinado ou notarizado.
+Substitua o IP pelo da sua impressora. A instalação compila para a arquitetura do próprio Mac; requer macOS com suporte a filtros CUPS/PPD, cabeçalhos CUPS e Command Line Tools da Apple. A compatibilidade foi verificada apenas no Mac desta sessão (macOS 27.0.1); outras versões e modelos precisam de validação. Não exige Homebrew. O instalador por scripts não inclui assinatura Developer ID nem notarização. Desde a v1.3.0 também há um aplicativo gráfico com pacote `.pkg` interno e binário universal; consulte abaixo.
 
 ## Configuração e limites
 
@@ -118,4 +118,30 @@ Testes de desenvolvimento (Python 3 necessário somente para os testes):
 ```sh
 python3 tests/filter.py
 sh tests/discovery.sh
+```
+
+## Instalador gráfico para Mac (v1.3.0)
+
+Baixe **Elgin-i9-FULL2-macOS-1.3.0.dmg** na seção Releases. Abra o DMG e o aplicativo **Instalar Elgin i9 FULL2.app**:
+
+1. Escolha **Buscar na rede** ou **Informar IP**.
+2. Autorize a busca. Se o macOS pedir permissão de rede local, permita para descobrir candidatos.
+3. Escolha o IP confirmado da sua i9 FULL2; a porta 9100 não identifica marca/modelo.
+4. Confirme a instalação e digite a senha de administrador na janela do macOS.
+5. Feche e reabra o aplicativo de impressão e selecione Elgin i9 FULL2.
+
+Não é preciso Xcode, Homebrew ou Python no Mac de destino. O aplicativo inclui um `.pkg` com o filtro universal **arm64 + x86_64** e o PPD. A compilação usa deployment target macOS 11, mas a execução em versões antigas ainda não foi validada: requer suporte CUPS/PPD. A versão Intel foi compilada, não testada num Mac Intel físico.
+
+O assistente usa diálogos nativos AppleScript e executa o pacote com autorização administrativa. O `.pkg` interno só instala os dois arquivos; quem realiza a busca e configura a fila é o aplicativo, evitando diálogos em scripts privilegiados do Installer. A busca usa a mesma lógica do instalador por Terminal, limitada ao segmento IPv4 da interface padrão. Nenhum teste de impressão é enviado automaticamente.
+
+O app possui assinatura ad-hoc para integridade local; **não tem Developer ID nem notarização**. O macOS pode bloquear a abertura. Se você confiar na origem, tente abrir e consulte **Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim**, conforme disponível na sua versão. Não é necessário desativar o Gatekeeper.
+
+O pacote substitui os arquivos deste projeto e configura a fila ELGIN_I9 com o IP escolhido. Preferências já salvas pelo usuário podem permanecer. Se a instalação do pacote terminar mas a criação da fila falhar, os arquivos podem ficar instalados; reabra o assistente para tentar novamente ou use o desinstalador.
+
+Validação desta entrega: compilação das duas arquiteturas, compilação AppleScript, assinatura ad-hoc, integridade do DMG, conteúdo do pacote e testes de protocolo/busca. A interação gráfica completa com senha, permissões de rede e impressão ainda precisa ser confirmada em um Mac de destino.
+
+Para gerar o DMG a partir do código em um Mac com ferramentas Apple:
+
+```sh
+sh installer/build.sh
 ```

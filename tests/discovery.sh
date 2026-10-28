@@ -23,6 +23,8 @@ result="$(printf '1\ns\n2\n' | sh "$PROJECT/discover.sh" 2>/dev/null)"
 result="$(printf '2\n192.168.1.20\n' | sh "$PROJECT/discover.sh" 2>/dev/null)"
 [ "$result" = 192.168.1.20 ]
 if printf '2\n999.1.1.1\n' | sh "$PROJECT/discover.sh" >/dev/null 2>&1; then exit 1; fi
+result="$(sh "$PROJECT/discover.sh" --list 2>/dev/null)"
+[ "$result" = "$(printf '192.168.0.127\n192.168.0.145')" ]
 MOCK_MASK=255.255.255.252
 export MOCK_MASK
 result="$(printf '1\ns\n192.168.0.110\n' | sh "$PROJECT/discover.sh" 2>/dev/null)"

@@ -1,6 +1,8 @@
 #!/bin/sh
 # Probes TCP 9100 without sending print data. stdout contains only the chosen IP.
 set -eu
+LIST_ONLY=0
+[ "${1:-}" != --list ] || LIST_ONLY=1
 valid_ip() {
     printf '%s\n' "$1" | awk -F. 'NF != 4 {exit 1} {for(i=1;i<=4;i++) if($i !~ /^[0-9]+$/ || $i>255 || length($i)>3) exit 1}'
 }
@@ -11,25 +13,31 @@ manual() {
     printf '%s\n' "$chosen"
     exit 0
 }
+if [ "$LIST_ONLY" -eq 0 ]; then
 printf '1) Buscar impressoras na rede local\n2) Informar IP manualmente\nEscolha [1]: ' >&2
 read -r mode || exit 1
 case "$mode" in ''|1) ;; 2) manual;; *) echo 'Opcao invalida.' >&2; exit 1;; esac
+fi
 iface="$(route -n get default 2>/dev/null | awk '/interface:/ {print $2; exit}')"
 local_ip="$(ipconfig getifaddr "$iface" 2>/dev/null || true)"
 if ! valid_ip "$local_ip"; then
     echo 'Nao foi possivel detectar a rede IPv4. Informe o IP manualmente.' >&2
+    if [ "$LIST_ONLY" -eq 1 ]; then exit 1; fi
     manual
 fi
 # Restrict the probe to the directly connected local /24 and actual netmask.
 mask="$(ipconfig getoption "$iface" subnet_mask 2>/dev/null || true)"
 if ! valid_ip "$mask"; then
     echo 'Nao foi possivel detectar a mascara. Informe o IP manualmente.' >&2
+    if [ "$LIST_ONLY" -eq 1 ]; then exit 1; fi
     manual
 fi
 prefix="${local_ip%.*}"
+if [ "$LIST_ONLY" -eq 0 ]; then
 printf 'Buscar %s.1 a %s.254 na interface %s? [s/N]: ' "$prefix" "$prefix" "$iface" >&2
 read -r confirm || exit 1
 case "$confirm" in s|S|sim|SIM) ;; *) manual;; esac
+fi
 TASK_TMP="$(mktemp -d)"
 trap 'rm -rf "$TASK_TMP"' EXIT
 trap 'exit 130' INT TERM HUP
@@ -63,9 +71,11 @@ wait
 for host in $(cat "$TASK_TMP/hosts"); do
     if [ -f "$TASK_TMP/$host.found" ]; then cat "$TASK_TMP/$host.found" >> "$TASK_TMP/results"; fi
 done
+if [ "$LIST_ONLY" -eq 1 ]; then cat "$TASK_TMP/results"; exit 0; fi
 count="$(wc -l < "$TASK_TMP/results" | tr -d ' ')"
 if [ "$count" -eq 0 ]; then
     echo 'Nenhum candidato encontrado. Confira cabo, IP, firewall ou outra interface/VLAN.' >&2
+    if [ "$LIST_ONLY" -eq 1 ]; then exit 1; fi
     manual
 fi
 echo 'Candidatos (a porta aberta NAO confirma que sejam Elgin i9):' >&2
