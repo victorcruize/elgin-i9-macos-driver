@@ -6,7 +6,7 @@ Driver CUPS independente para impressão de imagens, PDFs e cupons na Elgin i9 p
 
 1. Baixe o ZIP na seção **Releases** e descompacte.
 2. Instale as ferramentas de compilação da Apple, se necessário: `xcode-select --install`.
-3. Abra **Instalar.command**, informe o IP da sua impressora e digite a senha de administrador no Terminal. A senha não aparece enquanto você digita.
+3. Abra **Instalar.command**, escolha a busca na rede ou informe o IP da sua impressora e digite a senha de administrador no Terminal. A senha não aparece enquanto você digita.
 4. Feche e reabra o aplicativo de impressão. Selecione **Elgin i9** e papel **72 mm × 297 mm**.
 
 Se o macOS bloquear a abertura do arquivo baixado, use o Terminal na pasta extraída:
@@ -56,3 +56,11 @@ Na pasta do projeto, execute `sh uninstall.sh`. Isso remove somente a fila ELGIN
 Relate problemas incluindo versão do macOS, modelo da impressora, opções e uma amostra sem dados pessoais. Não envie senhas ou documentos com dados reais de clientes.
 
 Licença MIT. Elgin é marca de seu respectivo titular.
+
+## Busca na rede (v1.1.0)
+
+Ao abrir o instalador sem argumentos, escolha buscar ou informar o IP. A busca pede confirmação e verifica somente a porta TCP 9100, sem enviar texto ou comandos de impressão. Os candidatos são numerados: escolha o endereço confirmado da sua Elgin i9. Nenhuma impressora é selecionada automaticamente, mesmo quando só há um resultado.
+
+A busca usa a interface da rota padrão, limita-se ao segmento de até 254 endereços do IPv4 local e respeita a máscara da interface. Não cobre toda uma rede maior que /24, outras interfaces, redes IPv6 ou VLANs. Se uma VPN estiver como rota padrão ou não houver detecção da máscara, prefira informar o IP manualmente. A porta aberta não identifica marca ou modelo; confirme pelo painel da impressora ou autoteste. Não é preciso instalar Python ou nmap.
+
+Para usar somente o buscador: `sh discover.sh`. Para pular a busca: `sh install.sh 192.168.1.100` (substitua pelo IP real).

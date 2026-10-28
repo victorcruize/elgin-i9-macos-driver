@@ -3,7 +3,7 @@ set -eu
 HERE="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 [ "$(uname -s)" = Darwin ] || { echo "Este instalador requer macOS."; exit 1; }
 IP="${1:-}"
-if [ -z "$IP" ]; then printf 'IP da impressora Elgin i9: '; read -r IP; fi
+if [ -z "$IP" ]; then IP="$(/bin/sh "$HERE/discover.sh")"; fi
 case "$IP" in ''|*[!0-9.]*|.*|*.) echo "Informe um endereco IPv4 valido."; exit 1;; esac
 printf '%s\n' "$IP" | awk -F. 'NF != 4 {exit 1} {for(i=1;i<=4;i++) if($i == "" || $i>255 || length($i)>3) exit 1}' || { echo "IPv4 invalido."; exit 1; }
 xcrun --find clang >/dev/null 2>&1 || { echo "Instale as ferramentas Apple com: xcode-select --install"; exit 1; }
