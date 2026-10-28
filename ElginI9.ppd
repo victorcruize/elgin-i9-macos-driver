@@ -1,14 +1,14 @@
 *PPD-Adobe: "4.3"
 *FormatVersion: "4.3"
-*FileVersion: "1.0"
+*FileVersion: "1.1.1"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "ElginI9.ppd"
 *Manufacturer: "Elgin"
-*Product: "(Elgin i9)"
-*ModelName: "Elgin i9"
-*ShortNickName: "Elgin i9"
-*NickName: "Elgin i9 ESC/POS (driver simples)"
+*Product: "(Elgin i9 FULL2)"
+*ModelName: "Elgin i9 FULL2"
+*ShortNickName: "Elgin i9 FULL2"
+*NickName: "Elgin i9 FULL2 ESC/POS (driver simples)"
 *PSVersion: "(3010.000) 0"
 *LanguageLevel: "3"
 *ColorDevice: False

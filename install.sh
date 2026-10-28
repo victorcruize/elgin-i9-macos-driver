@@ -15,5 +15,5 @@ sudo -v
 sudo install -d -o root -g wheel -m 755 "$DIR"
 sudo install -o root -g wheel -m 755 "$BUILD/rastertoelgini9" "$DIR/rastertoelgini9"
 sudo install -o root -g wheel -m 644 "$HERE/ElginI9.ppd" "$DIR/ElginI9.ppd"
-sudo lpadmin -p ELGIN_I9 -E -v "socket://$IP:9100" -P "$DIR/ElginI9.ppd" -D "Elgin i9" -o printer-is-shared=false
-echo "Elgin i9 instalada em $IP:9100. Feche e reabra o aplicativo antes de imprimir."
+sudo lpadmin -p ELGIN_I9 -E -v "socket://$IP:9100" -P "$DIR/ElginI9.ppd" -D "Elgin i9 FULL2" -o printer-is-shared=false
+echo "Elgin i9 FULL2 instalada em $IP:9100. Feche e reabra o aplicativo antes de imprimir."

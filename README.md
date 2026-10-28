@@ -1,13 +1,13 @@
-# Elgin i9 — driver comunitário para macOS
+# Elgin i9 FULL2 — driver comunitário para macOS
 
-Driver CUPS independente para impressão de imagens, PDFs e cupons na Elgin i9 por rede Ethernet (ESC/POS, TCP 9100). Criado e ajustado com teste físico de impressão em uma i9. Não é um driver oficial da Elgin e não contém código do driver Windows.
+Driver CUPS independente para impressão de imagens, PDFs e cupons na **Elgin i9 FULL2** por rede Ethernet (ESC/POS, TCP 9100). Criado e ajustado com teste físico de impressão em uma i9 FULL2 identificada pelo usuário. Não é um driver oficial da Elgin e não contém código do driver Windows.
 
 ## Instalação
 
 1. Baixe o ZIP na seção **Releases** e descompacte.
 2. Instale as ferramentas de compilação da Apple, se necessário: `xcode-select --install`.
 3. Abra **Instalar.command**, escolha a busca na rede ou informe o IP da sua impressora e digite a senha de administrador no Terminal. A senha não aparece enquanto você digita.
-4. Feche e reabra o aplicativo de impressão. Selecione **Elgin i9** e papel **72 mm × 297 mm**.
+4. Feche e reabra o aplicativo de impressão. Selecione **Elgin i9 FULL2** e papel **72 mm × 297 mm**.
 
 Se o macOS bloquear a abertura do arquivo baixado, use o Terminal na pasta extraída:
 
@@ -64,3 +64,13 @@ Ao abrir o instalador sem argumentos, escolha buscar ou informar o IP. A busca p
 A busca usa a interface da rota padrão, limita-se ao segmento de até 254 endereços do IPv4 local e respeita a máscara da interface. Não cobre toda uma rede maior que /24, outras interfaces, redes IPv6 ou VLANs. Se uma VPN estiver como rota padrão ou não houver detecção da máscara, prefira informar o IP manualmente. A porta aberta não identifica marca ou modelo; confirme pelo painel da impressora ou autoteste. Não é preciso instalar Python ou nmap.
 
 Para usar somente o buscador: `sh discover.sh`. Para pular a busca: `sh install.sh 192.168.1.100` (substitua pelo IP real).
+
+## Modelo e drivers existentes
+
+Este projeto foi testado na **Elgin i9 FULL2**, conforme identificação do proprietário da unidade utilizada. O [Download Center oficial indicado](https://www.elgin.com.br/download-center-product?id=39092b4d-3dbe-462a-aa95-ba5e806aeaaa&categoryId=28) apresenta o produto com o nome **i9 Full Impressora Térmica de Cupom**, sem o sufixo “2”. Não presumimos equivalência entre todas as revisões da família.
+
+Na consulta de 28/10/2026, a listagem oficial desse produto continha **Driver de Windows V1.7.6** e **Driver de Linux V1.2.3**, sem um pacote identificado como macOS. Isso descreve a listagem consultada, não comprova ausência em todo o catálogo da Elgin.
+
+Existe também o projeto independente [lguifcosta/elgin-escpos-macos](https://github.com/lguifcosta/elgin-escpos-macos), que declara suporte à Elgin i9. Seu README informa teste físico em uma Bematech MP-4200 HS e que a i9 não foi testada separadamente; não declara validação específica na FULL2. Este repositório é uma implementação independente, não uma cópia desse projeto nem do driver Windows.
+
+Outras variantes i9, i7, i8 e modelos de outros fabricantes não foram validados por este projeto.
