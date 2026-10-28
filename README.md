@@ -74,3 +74,7 @@ Na consulta de 28/10/2026, a listagem oficial desse produto continha **Driver de
 Existe também o projeto independente [lguifcosta/elgin-escpos-macos](https://github.com/lguifcosta/elgin-escpos-macos), que declara suporte à Elgin i9. Seu README informa teste físico em uma Bematech MP-4200 HS e que a i9 não foi testada separadamente; não declara validação específica na FULL2. Este repositório é uma implementação independente, não uma cópia desse projeto nem do driver Windows.
 
 Outras variantes i9, i7, i8 e modelos de outros fabricantes não foram validados por este projeto.
+
+## Comparação com o Linux oficial
+
+Veja a [análise do pacote Linux v1.2.3](docs/linux-comparison.md), com parâmetros coincidentes, recursos ausentes e limites de validação. A geometria de impressão atual coincide com o PPD oficial.
