@@ -1,0 +1,103 @@
+*PPD-Adobe: "4.3"
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "ElginI9.ppd"
+*Manufacturer: "Elgin"
+*Product: "(Elgin i9)"
+*ModelName: "Elgin i9"
+*ShortNickName: "Elgin i9"
+*NickName: "Elgin i9 ESC/POS (driver simples)"
+*PSVersion: "(3010.000) 0"
+*LanguageLevel: "3"
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*FileSystem: False
+*Throughput: "1"
+*LandscapeOrientation: Plus90
+*TTRasterizer: Type42
+*cupsVersion: 1.4
+*cupsModelNumber: 0
+*cupsFilter: "application/vnd.cups-raster 0 /Library/Printers/Elgin/i9/rastertoelgini9"
+
+*OpenUI *PageSize/Tamanho do papel: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*DefaultPageSize: 72mmx297mm
+*PageSize 72mmx297mm/72mm x 297mm (papel 80mm): "<</PageSize[204 842]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*DefaultPageRegion: 72mmx297mm
+*PageRegion 72mmx297mm/72mm x 297mm (papel 80mm): "<</PageSize[204 842]/ImagingBBox null>>setpagedevice"
+*CloseUI: *PageRegion
+
+*DefaultImageableArea: 72mmx297mm
+*ImageableArea 72mmx297mm: "0 0 204 842"
+
+*DefaultPaperDimension: 72mmx297mm
+*PaperDimension 72mmx297mm: "204 842"
+
+*MaxMediaWidth: "204"
+*MaxMediaHeight: "5669"
+*HWMargins: 0 0 0 0
+*CustomPageSize True: "pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice"
+*ParamCustomPageSize Width: 1 points 204 204
+*ParamCustomPageSize Height: 2 points 36 5669
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 0
+
+*OpenUI *Resolution/Resolucao: PickOne
+*OrderDependency: 20 AnySetup *Resolution
+*DefaultResolution: 203dpi
+*Resolution 203dpi/203 dpi: "<</HWResolution[203 203]>>setpagedevice"
+*CloseUI: *Resolution
+
+*OpenUI *ColorModel/Modo de saida: PickOne
+*OrderDependency: 10 AnySetup *ColorModel
+*DefaultColorModel: Gray
+*ColorModel Gray/Preto e branco: "<</cupsColorSpace 18/cupsColorOrder 0/cupsCompression 0/cupsBitsPerColor 8>>setpagedevice"
+*CloseUI: *ColorModel
+
+*OpenUI *ElginCut/Corte do papel: PickOne
+*OrderDependency: 30 AnySetup *ElginCut
+*DefaultElginCut: Partial
+*ElginCut Partial/Corte parcial: ""
+*ElginCut Full/Corte total: ""
+*ElginCut None/Sem corte: ""
+*CloseUI: *ElginCut
+
+*OpenUI *ElginBand/Linhas por bloco: PickOne
+*OrderDependency: 40 AnySetup *ElginBand
+*DefaultElginBand: 64
+*ElginBand 24/24 linhas: ""
+*ElginBand 64/64 linhas: ""
+*ElginBand 128/128 linhas: ""
+*CloseUI: *ElginBand
+
+*OpenUI *ElginDelay/Pausa entre blocos: PickOne
+*OrderDependency: 50 AnySetup *ElginDelay
+*DefaultElginDelay: 30
+*ElginDelay 0/Sem pausa: ""
+*ElginDelay 30/30 ms: ""
+*ElginDelay 80/80 ms: ""
+*ElginDelay 200/200 ms: ""
+*CloseUI: *ElginDelay
+
+*OpenUI *ElginShift/Centralizar (pontos para a esquerda): PickOne
+*OrderDependency: 60 AnySetup *ElginShift
+*DefaultElginShift: 12
+*ElginShift 0/0 (sem ajuste): ""
+*ElginShift 8/8: ""
+*ElginShift 12/12 (papel 79mm): ""
+*ElginShift 16/16: ""
+*CloseUI: *ElginShift
+
+*OpenUI *ElginFit/Ajuste do conteudo: PickOne
+*OrderDependency: 70 AnySetup *ElginFit
+*DefaultElginFit: Content
+*ElginFit Content/Cortar margens e ajustar a largura: ""
+*ElginFit None/Sem ajuste (tamanho original): ""
+*CloseUI: *ElginFit
