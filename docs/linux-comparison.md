@@ -36,3 +36,7 @@ Melhorias prioritárias para uma próxima implementação: avanço configurável
 O PPD oficial expõe apenas corte parcial para i9. Não se deve anunciar corte total como validado com base nesta análise. A transformação por escala do nosso filtro também não garante leitura de todo QR/barcode; valide o cupom com leitor real.
 
 Os demais recursos são opcionais e não justificam mudar os padrões que já funcionaram na unidade testada. O pacote proprietário não é redistribuído neste repositório.
+
+## Implementação posterior: v1.2.0
+
+A comparação acima registra o estado anterior. Em v1.2.0 foram implementados `ElginFeed` (0–30 mm adicionais), `ElginFinishScope` (por página ou por trabalho) e `ElginSaveBottom` (independente de `ElginFit`). O avanço usa raster branco, não copia o binário Linux. Veja o README para semântica, testes e limites. A instalação local não é atualizada automaticamente.

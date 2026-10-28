@@ -78,3 +78,44 @@ Outras variantes i9, i7, i8 e modelos de outros fabricantes não foram validados
 ## Comparação com o Linux oficial
 
 Veja a [análise do pacote Linux v1.2.3](docs/linux-comparison.md), com parâmetros coincidentes, recursos ausentes e limites de validação. A geometria de impressão atual coincide com o PPD oficial.
+
+## Opções de finalização (v1.2.0)
+
+Os padrões anteriores foram preservados: corte parcial por página, nenhum avanço adicional e economia de branco final ligada. A atualização do repositório não altera automaticamente a impressora instalada: baixe a nova versão e execute novamente o instalador para atualizar filtro e PPD.
+
+| Opção | Valores | Padrão |
+|---|---|---|
+| `ElginFinishScope` | `Page` por página/cópia ou `Job` ao final de todo o trabalho | `Page` |
+| `ElginFeed` | `0`, `5`, `10`, `15`, `20`, `25`, `30` mm adicionais antes da finalização | `0` |
+| `ElginSaveBottom` | `On` recorta branco final; `Off` preserva o restante da altura | `On` |
+
+Exemplo: tamanho original, economia de branco final, 5 mm adicionais e um corte ao final do trabalho:
+
+```sh
+lp -d ELGIN_I9 -o ElginFit=None -o ElginSaveBottom=On -o ElginFinishScope=Job -o ElginFeed=5 '/caminho/real/cupom.pdf'
+```
+
+Para salvar essas opções como preferência do seu usuário:
+
+```sh
+lpoptions -p ELGIN_I9 -o ElginFinishScope=Job -o ElginFeed=5
+```
+
+Para voltar aos padrões de finalização:
+
+```sh
+lpoptions -p ELGIN_I9 -o ElginFinishScope=Page -o ElginFeed=0 -o ElginSaveBottom=On
+```
+
+O avanço adicional usa faixas raster em branco, calculadas a 203 dpi, respeitando tamanho de bloco e pausa. Isso evita depender das unidades dos comandos de avanço do firmware. Ele se soma à margem final e ao avanço físico necessário ao corte; não representa a distância total entre o texto e a borda cortada. Com corte desativado (`ElginCut=None`), a finalização mantém também o avanço legado de quatro linhas.
+
+`ElginSaveBottom=Off` com `ElginFit=None` preserva a altura original rasterizada; com `ElginFit=Content`, preserva o branco inferior após a transformação proporcional do conteúdo. Páginas totalmente em branco continuam sendo ignoradas. `Job` finaliza uma vez para todo o fluxo recebido, inclusive todas as cópias; não separa conjuntos de cópias. O PPD não anuncia colacionamento pelo filtro.
+
+As novas opções foram verificadas em testes offline do protocolo; avanço físico e finalização de várias páginas ainda requerem validação na i9 FULL2. O corte total continua sem validação física. Não foram adicionados comandos de gaveta, buzzer ou logotipo em memória.
+
+Testes de desenvolvimento (Python 3 necessário somente para os testes):
+
+```sh
+python3 tests/filter.py
+sh tests/discovery.sh
+```

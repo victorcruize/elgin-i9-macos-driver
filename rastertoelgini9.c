@@ -32,6 +32,29 @@ put(const unsigned char *data, size_t len)
   fwrite(data, 1, len, stdout);
 }
 
+/* Feed in raster dots, avoiding firmware-dependent motion-unit commands. */
+static void
+finish_receipt(const char *cut, int feed_mm, int band_rows, int delay_ms)
+{
+  unsigned char blank[OUT_BYTES] = {0};
+  int dots = (int)lround(feed_mm * 203.0 / 25.4);
+  while (dots > 0) {
+    int n = dots < band_rows ? dots : band_rows;
+    unsigned char hdr[8] = {0x1d, 'v', '0', 0, OUT_BYTES, 0, n, 0};
+    put(hdr, sizeof(hdr));
+    for (int y = 0; y < n; y++) put(blank, sizeof(blank));
+    fflush(stdout);
+    if (delay_ms) usleep((useconds_t)delay_ms * 1000);
+    dots -= n;
+  }
+  if (!strcmp(cut, "Full"))
+    put((const unsigned char *)"\x1d" "VA\x00", 4);
+  else if (!strcmp(cut, "None"))
+    put((const unsigned char *)"\x1b" "d\x04", 3);
+  else
+    put((const unsigned char *)"\x1d" "VB\x00", 4);
+}
+
 /* Luminance 0..255, 255 = white. */
 static int
 luma(const unsigned char *line, int x, const cups_page_header2_t *h)
@@ -78,6 +101,7 @@ main(int argc, char *argv[])
   int                 nopts;
   const char          *cut, *fit, *v;
   int                 band_rows, delay_ms, shift;
+  int feed_mm = 0, save_bottom = 1, job_cut = 0, printed = 0;
 
   if (argc < 6 || argc > 7)
   {
@@ -114,6 +138,17 @@ main(int argc, char *argv[])
     delay_ms = 0;
   if (shift < 0 || shift > 40)
     shift = 12;
+
+  v = cupsGetOption("ElginFeed", nopts, opts);
+  if (v) {
+    char *end;
+    long mm = strtol(v, &end, 10);
+    if (*v && !*end && mm >= 0 && mm <= 30) feed_mm = (int)mm;
+  }
+  v = cupsGetOption("ElginSaveBottom", nopts, opts);
+  save_bottom = !v || strcmp(v, "Off");
+  v = cupsGetOption("ElginFinishScope", nopts, opts);
+  job_cut = v && !strcmp(v, "Job");
 
   ras = cupsRasterOpen(fd, CUPS_RASTER_READ);
   if (!ras)
@@ -193,7 +228,7 @@ main(int argc, char *argv[])
       y0    = miny;
       pad_l = OUT_W / 2 - shift - cw * s / 2.0;
       ytop  = TOP_ROWS;
-      out_h = ytop + (int)ceil(ch * s) + TAIL_ROWS;
+      out_h = ytop + (int)ceil((save_bottom ? ch : height - miny) * s) + TAIL_ROWS;
     }
     else
     {
@@ -202,7 +237,7 @@ main(int argc, char *argv[])
       y0    = 0;
       pad_l = -shift;
       ytop  = 0;
-      out_h = maxy + 1 + TAIL_ROWS;
+      out_h = save_bottom ? maxy + 1 + TAIL_ROWS : height;
     }
 
     out = calloc((size_t)out_h, OUT_BYTES);
@@ -243,12 +278,8 @@ main(int argc, char *argv[])
           usleep((useconds_t)delay_ms * 1000);
       }
 
-      if (!strcmp(cut, "Full"))
-        put((const unsigned char *)"\x1d" "VA\x00", 4); /* GS V 65 0 */
-      else if (!strcmp(cut, "None"))
-        put((const unsigned char *)"\x1b" "d\x04", 3); /* ESC d 4 */
-      else
-        put((const unsigned char *)"\x1d" "VB\x00", 4);
+      printed = 1;
+      if (!job_cut) finish_receipt(cut, feed_mm, band_rows, delay_ms);
     }
 
     free(line);
@@ -256,7 +287,9 @@ main(int argc, char *argv[])
     free(out);
   }
 
+  if (job_cut && printed) finish_receipt(cut, feed_mm, band_rows, delay_ms);
   fflush(stdout);
+  if (ferror(stdout)) { cupsRasterClose(ras); return 1; }
   cupsRasterClose(ras);
   return 0;
 }
